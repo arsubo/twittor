@@ -3,7 +3,7 @@ importScripts('js/sw-utils.js');
 
 
 const STATIC_CACHE    = 'static-v5';
-const DYNAMIC_CACHE   = 'dynamic-v2';
+const DYNAMIC_CACHE   = 'dynamic-v3';
 const INMUTABLE_CACHE = 'inmutable-v1';
 
 
@@ -73,8 +73,6 @@ self.addEventListener('activate', e => {
 
 
 self.addEventListener( 'fetch', e => {
-
-
     const respuesta = caches.match( e.request ).then( res => {
 
         if ( res ) {
