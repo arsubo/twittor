@@ -1,8 +1,14 @@
 
+//varificamos la ruta si es localhost u otro host
+var url = window.location.href;
+var swLocation = '/twittor/sw.js'
+
 //registramos SW
 
 if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('/sw.js');
+    //valida cuando esté en internet vs localhost
+    swLocation = (url.includes('localhost')) ? '/sw.js' : swLocation;
+    navigator.serviceWorker.register(swLocation);
 }
 // Referencias de jQuery
 
