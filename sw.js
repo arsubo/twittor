@@ -73,20 +73,32 @@ self.addEventListener('activate', e => {
 
 
 self.addEventListener( 'fetch', e => {
-    const respuesta = caches.match( e.request ).then( res => {
+    const request = e.request;
 
-        if ( res ) {
+    // Verifica si es una petición a una URL externa con CORS
+    if (request.url.startsWith('https://use.fontawesome.com') ||
+        request.url.startsWith('https://fonts.googleapis.com')) {
+        
+        // Intenta hacer la petición con 'no-cors'
+        const modifiedRequest = new Request(request, { mode: 'no-cors' });
+
+        e.respondWith(
+            fetch(modifiedRequest).catch(() => caches.match(request))
+        );
+        return;
+    }
+
+    const respuesta = caches.match(request).then(res => {
+        if (res) {
             return res;
         } else {
-
-            return fetch( e.request ).then( newRes => {
-
-                return actualizaCacheDinamico( DYNAMIC_CACHE, e.request, newRes );
-
+            return fetch(request).then(newRes => {
+                return actualizaCacheDinamico(DYNAMIC_CACHE, request, newRes);
             });
-
         }
+    });
 
+    e.respondWith(respuesta);
     });
 
 
